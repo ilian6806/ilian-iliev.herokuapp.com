@@ -1,0 +1,31 @@
+{
+  "name": "ilian-iliev.herokuapp.com",
+  "version": "1.0.0",
+  "description": "Personal SPA",
+  "main": "server.js",
+  "scripts": {
+    "run": "node server.js", 
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": "6.10.x",
+    "npm": "4.5.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ilian6806/ilian-iliev.herokuapp.com.git"
+  },
+  "keywords": [
+    "ilian",
+    "iliev"
+  ],
+  "author": "ilian.iliev",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ilian6806/ilian-iliev.herokuapp.com/issues"
+  },
+  "homepage": "https://github.com/ilian6806/ilian-iliev.herokuapp.com#readme",
+  "dependencies": {
+    "express": "4.15.x"
+  }
+}
