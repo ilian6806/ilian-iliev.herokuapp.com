@@ -104,16 +104,14 @@ section {
   background: #fff;
 }
 
-.preloader > i {
+.preloader > img {
   position: absolute;
-  font-size: 36px;
-  line-height: 36px;
   top: 50%;
   left: 50%;
-  height: 36px;
-  width: 36px;
-  margin-top: -15px;
-  margin-left: -15px;
+  height: 50px;
+  width: 50px;
+  margin-top: -25px;
+  margin-left: -25px;
   display: inline-block;
 }
 
