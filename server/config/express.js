@@ -1,5 +1,5 @@
 var express = require('express');
 
 module.exports = function(app, config) {
-	app.use(express.static(config.rootPath + '/public'));
+    app.use(express.static(config.rootPath + '/public'));
 };
