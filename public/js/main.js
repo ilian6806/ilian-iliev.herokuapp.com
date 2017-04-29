@@ -1,170 +1,99 @@
-jQuery(function($) {
+var pageController = (function() {
 
-	var $body = $('html, body');
-	var $mainNav = $('.main-nav');
+    // Initialize elements
+    var 
+        $window = $(window),
+        $body = $('html, body'),
+        $preloader = $('.preloader'),
+        $topCarouselItems = $('#home-slider .item'),
+        $topArrow = $('#top-arrow'),
+        $mainNav = $('.main-nav'),
+        $mainNavItems = $('.navbar-collapse li.scroll'),
+        $mainNavLinks = $('.navbar-collapse').find('.scroll a'),
+        $collapsedNavItems = $('.navbar-collapse ul li a'),
+        $collapsedNavToggle = $('.navbar-toggle'),
+        $aboutContainer = $('#about'),
+        $progressBars = $('div.progress-bar'),
+        $address = $('.address'),
+        $map = $('#google-map');
 
-	//Preloader
-	var preloader = $('.preloader');
-	$(window).load(function(){
-		preloader.remove();
-	});
 
-	//#main-slider
-	var slideHeight = $(window).height();
-	$('#home-slider .item').css('height', slideHeight);
+    $topCarouselItems.css('height', $window.height() + 2);
 
-	$(window).resize(function(){'use strict',
-		$('#home-slider .item').css('height', slideHeight);
-	});
-	
-	//Scroll Menu
-	$(window).on('scroll', function(){
-		if( $(window).scrollTop()>slideHeight ){
-			$mainNav.addClass('navbar-fixed-top');
-		} else {
-			$mainNav.removeClass('navbar-fixed-top');
-		}
-	});
-	
-	// Navigation Scroll
-	$(window).scroll(function(event) {
-		Scroll();
-	});
+    // Scroll event optimization
+    var maimNavHrefs = [];
+    $mainNavLinks.each(function() {
+        maimNavHrefs.push($(this).attr('href'));
+    });
 
-	$('.navbar-collapse ul li a').on('click', function() {  
-		$body.animate({scrollTop: $(this.hash).offset().top - 5}, 1000);
-		return false;
-	});
+    // Bind all window events
+    $window.load(function() {
 
-	// User define function
-	function Scroll() {
-		var contentTop      =   [];
-		var contentBottom   =   [];
-		var winTop      =   $(window).scrollTop();
-		var rangeTop    =   200;
-		var rangeBottom =   500;
-		$('.navbar-collapse').find('.scroll a').each(function() {
-			contentTop.push( $( $(this).attr('href') ).offset().top);
-			contentBottom.push( $( $(this).attr('href') ).offset().top + $( $(this).attr('href') ).height() );
-		});
-		$.each( contentTop, function(i){
-			if ( winTop > contentTop[i] - rangeTop ){
-				$('.navbar-collapse li.scroll')
-				.removeClass('active')
-				.eq(i).addClass('active');			
-			}
-		})
-	};
+        $preloader.remove();
 
-	$('#tohash').on('click', function(){
-		$body.animate({scrollTop: $(this.hash).offset().top - 5}, 1000);
-		return false;
-	});
-	
-	//Initiat WOW JS
-	new WOW().init();
-	//smoothScroll
-	smoothScroll.init();
-	
-	// Progress Bar
-	$('#about').bind('inview', function(event, visible, visiblePartX, visiblePartY) {
-		if (visible) {
-			$.each($('div.progress-bar'), function() {
-				$(this).css('width', $(this).attr('aria-valuetransitiongoal')+'%');
-			});
-			$(this).unbind('inview');
-		}
-	});
+    }).resize(function() {
 
-	//Countdown
-	$('#features').bind('inview', function(event, visible, visiblePartX, visiblePartY) {
-		if (visible) {
-			$(this).find('.timer').each(function () {
-				var $this = $(this);
-				$({ Counter: 0 }).animate({ Counter: $this.text() }, {
-					duration: 2000,
-					easing: 'swing',
-					step: function () {
-						$this.text(Math.ceil(this.Counter));
-					}
-				});
-			});
-			$(this).unbind('inview');
-		}
-	});
+        $topCarouselItems.css('height', $window.height());
 
-	// Portfolio Single View
-	$('#portfolio').on('click','.folio-read-more',function(event){
-		event.preventDefault();
-		var link = $(this).data('single_url');
-		var full_url = '#portfolio-single-wrap',
-		parts = full_url.split("#"),
-		trgt = parts[1],
-		target_top = $("#"+trgt).offset().top;
+    }).scroll(function() {
 
-		$body.animate({scrollTop:target_top}, 600);
-		$('#portfolio-single').slideUp(500, function(){
-			$(this).load(link,function(){
-				$(this).slideDown(500);
-			});
-		});
-	});
+        var winTop = $window.scrollTop();
+        var contentTop = [];
 
-	// Close Portfolio Single View
-	$('#portfolio-single-wrap').on('click', '.close-folio-item',function(event) {
-		event.preventDefault();
-		var full_url = '#portfolio',
-		parts = full_url.split("#"),
-		trgt = parts[1],
-		target_offset = $("#"+trgt).offset(),
-		target_top = target_offset.top;
-		$body.animate({scrollTop:target_top}, 600);
-		$("#portfolio-single").slideUp(500);
-	});
+        $mainNav[winTop > $window.height() ? 'addClass' : 'removeClass']('navbar-fixed-top');
 
-	// Contact form
-	var $form = $('#main-contact-form');
-	$form.submit(function(event) {
-		event.preventDefault();
-		var $form_status = $('<div class="form_status"></div>');
-		$.ajax({
-			type: 'POST',
-			url: $form.attr('action'),
-			data: $form.serialize(),
-			beforeSend: function() {
-				$form.prepend( $form_status.html('<p><i class="fa fa-spinner fa-spin"></i> Email is sending...</p>').fadeIn() );
-			}
-		}).done(function(data){
-			$form_status.html('<p class="text-success">I will contact you as soon as possible !</p>').delay(4000).fadeOut(400, function () {
-				$(this).remove();
-			});
-		});
-	});
+        for (var i = 0, len = maimNavHrefs.length;  i < len; i++) {
+            contentTop.push($(maimNavHrefs[i]).offset().top);
+        }
 
-	//Google Map
-	var $map = $('#google-map');
-	var latitude = $map.data('latitude');
-	var longitude = $map.data('longitude');
+        for (var i = 0, len = contentTop.length;  i < len; i++) {
+            if (winTop > contentTop[i] - 200){
+                $mainNavItems.removeClass('active').eq(i).addClass('active');          
+            }
+        }
 
-	function initialize_map() {
-		var myLatlng = new google.maps.LatLng(latitude,longitude);
-		var mapOptions = {
-			zoom: 6,
-			scrollwheel: false,
-			center: myLatlng
-		};
-		var map = new google.maps.Map($map[0], mapOptions);
-		var contentString = '';
-		var infowindow = new google.maps.InfoWindow({
-			content: '<div class="map-content"><ul class="address">' + $('.address').html() + '</ul></div>'
-		});
-		var marker = new google.maps.Marker({
-			position: myLatlng,
-			map: map
-		});
-		google.maps.event.addListener(marker, 'click', function() {
-			infowindow.open(map,marker);
-		});
-	}
-	google.maps.event.addDomListener(window, 'load', initialize_map);
+        contentTop = null;
+    });
+
+    // Bind scroll on click events
+    $.each([$collapsedNavItems, $topArrow], function (i, el) {
+        el.on('click', function() {
+            $body.animate({ scrollTop: $(this.hash).offset().top - 5 }, 1000);
+            if ($window.width() < 768) { // collapsed
+                $collapsedNavToggle.trigger('click');
+            }
+            return false;
+        });
+    });
+
+    // Bind progress bars events
+    $aboutContainer.bind('inview', function(event, visible, visiblePartX, visiblePartY) {
+        if (visible) {
+            $.each($progressBars, function() {
+                $(this).css('width', $(this).attr('aria-valuetransitiongoal') + '%');
+            });
+            $(this).unbind('inview');
+        }
+    });
+
+    return {
+        loadGoogleMap: function () {
+            var myLatlng = new google.maps.LatLng($map.data('latitude'), $map.data('longitude'));
+            var map = new google.maps.Map($map[0], {
+                zoom: 6,
+                scrollwheel: false,
+                center: myLatlng
+            });
+            var infowindow = new google.maps.InfoWindow({
+                content: '<div class="map-content"><ul class="address">' + $address.html() + '</ul></div>'
+            });
+            var marker = new google.maps.Marker({
+                position: myLatlng,
+                map: map
+            });
+            google.maps.event.addListener(marker, 'click', function() {
+                infowindow.open(map,marker);
+            });
+        }
+    };
 });
