@@ -1,4 +1,7 @@
-var pageController = (function() {
+var pageController = {};
+
+
+pageController.init = function() {
 
     // Initialize elements
     var 
@@ -13,9 +16,7 @@ var pageController = (function() {
         $collapsedNavItems = $('.navbar-collapse ul li a'),
         $collapsedNavToggle = $('.navbar-toggle'),
         $aboutContainer = $('#about'),
-        $progressBars = $('div.progress-bar'),
-        $address = $('.address'),
-        $map = $('#google-map');
+        $progressBars = $('div.progress-bar');
 
 
     $topCarouselItems.css('height', $window.height() + 2);
@@ -75,25 +76,29 @@ var pageController = (function() {
             $(this).unbind('inview');
         }
     });
+};
 
-    return {
-        loadGoogleMap: function () {
-            var myLatlng = new google.maps.LatLng($map.data('latitude'), $map.data('longitude'));
-            var map = new google.maps.Map($map[0], {
-                zoom: 6,
-                scrollwheel: false,
-                center: myLatlng
-            });
-            var infowindow = new google.maps.InfoWindow({
-                content: '<div class="map-content"><ul class="address">' + $address.html() + '</ul></div>'
-            });
-            var marker = new google.maps.Marker({
-                position: myLatlng,
-                map: map
-            });
-            google.maps.event.addListener(marker, 'click', function() {
-                infowindow.open(map,marker);
-            });
-        }
-    };
-});
+
+pageController.loadGoogleMap = function () {
+
+    if (! 'google' in window) { return; }
+
+    var $map = $('#google-map');
+    var $address = $('.address');
+    var myLatlng = new google.maps.LatLng($map.data('latitude'), $map.data('longitude'));
+    var map = new google.maps.Map($map[0], {
+        zoom: 6,
+        scrollwheel: false,
+        center: myLatlng
+    });
+    var infowindow = new google.maps.InfoWindow({
+        content: '<div class="map-content"><ul class="address">' + $address.html() + '</ul></div>'
+    });
+    var marker = new google.maps.Marker({
+        position: myLatlng,
+        map: map
+    });
+    google.maps.event.addListener(marker, 'click', function() {
+        infowindow.open(map,marker);
+    });
+};
