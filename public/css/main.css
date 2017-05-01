@@ -119,6 +119,13 @@ section {
 /*************************
 ********Home CSS**********
 **************************/
+.main-logo {
+    font-size: 24px;
+    line-height: 38px;
+    color: white;
+    vertical-align: middle;
+}
+
 #home-slider {
   overflow: hidden;
   position: relative;

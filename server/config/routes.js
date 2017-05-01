@@ -9,6 +9,22 @@ module.exports = function(app, config) {
         });
     }
 
+    app.get('/about', function(req, res) {
+        res.redirect('/#about');
+    });
+    app.get('/projects', function(req, res) {
+        res.redirect('/#projects');
+    });
+    app.get('/portfolio', function(req, res) {
+        res.redirect('/#projects');
+    });
+    app.get('/blog', function(req, res) {
+        res.redirect('/#blog');
+    });
+    app.get('/contact', function(req, res) {
+        res.redirect('/#contact');
+    });
+
     app.get('/resources/*', send404);
     app.get('/games/*', send404);
 
