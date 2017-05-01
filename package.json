@@ -4,7 +4,7 @@
   "description": "Personal SPA",
   "main": "server.js",
   "scripts": {
-    "run": "node server.js", 
+    "run": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
@@ -26,6 +26,8 @@
   },
   "homepage": "https://github.com/ilian6806/ilian-iliev.herokuapp.com#readme",
   "dependencies": {
-    "express": "4.15.x"
+    "body-parser": "1.17.x",
+    "express": "4.15.x",
+    "nodemailer": "4.0.x"
   }
 }

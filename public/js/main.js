@@ -16,7 +16,8 @@ pageController.init = function() {
         $collapsedNavItems = $('.navbar-collapse ul li a'),
         $collapsedNavToggle = $('.navbar-toggle'),
         $aboutContainer = $('#about'),
-        $progressBars = $('div.progress-bar');
+        $progressBars = $('div.progress-bar'),
+        $form = $('#main-contact-form');
 
 
     $topCarouselItems.css('height', $window.height() + 2);
@@ -75,6 +76,31 @@ pageController.init = function() {
             });
             $(this).unbind('inview');
         }
+    });
+
+    // Bind submit action
+    $form.submit(function(e) {
+        e.preventDefault();
+        var $form_status = $('<div class="form_status"></div>');
+        $.ajax({
+            type: 'POST',
+            url: $form.attr('action'),
+            data: $form.serialize(),
+            beforeSend: function() {
+                $('.form_status').remove();
+                $form.prepend( 
+                    $form_status.html('<p><i class="fa fa-spinner fa-spin"></i> Email is sending...</p>').fadeIn() 
+                );
+            }
+        }).success(function(data){
+            $form_status.html(
+                '<p class="text-success">I will contact you as soon as possible !</p>'
+            ).delay(4000).fadeOut(400, function () {
+                $(this).remove();
+            });
+        }).error(function () {
+            $form_status.html('<p>This can`t be send right now... Please use some of the other options below !</p>');
+        });
     });
 };
 

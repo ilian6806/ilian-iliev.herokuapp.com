@@ -1,13 +1,16 @@
-var sender = require('../utilities/pagesender');
+var pageSender = require('../utilities/pagesender');
+var mailSender = require('../utilities/mailsender');
 
 module.exports = function(app, config) {
 
     function send404(req, res) {
-        sender.send(res, {
+        pageSender.send(res, {
             path: config.rootPath + '/server/404.html',
             status: 404
         });
     }
+
+    app.post('/sendmail', mailSender.send);
 
     app.get('/about', function(req, res) {
         res.redirect('/#about');
