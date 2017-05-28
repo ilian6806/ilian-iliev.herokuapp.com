@@ -102,6 +102,14 @@ pageController.init = function() {
             $form_status.html('<p>This can`t be send right now... Please use some of the other options below !</p>');
         });
     });
+
+    // Check for hash navigation
+    if (window.location.hash) {
+        var target = document.getElementById(window.location.hash.replace('#', ''));
+        if (target && target.scrollIntoView) {
+            target.scrollIntoView(true);
+        }
+    }
 };
 
 
